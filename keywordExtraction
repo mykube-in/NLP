@@ -1,0 +1,22 @@
+import string
+import pandas as pd
+
+data = pd.read_csv("Rev_Analysis_1.csv")
+
+def remove_punctuation(text):
+    no_punct=[words for words in str(text) if words not in string.punctuation and words not in "REV" and words not in "\n"]
+    words_wo_punct=''.join(no_punct)
+    return words_wo_punct
+
+def apply_function(text):
+    import spacy
+    nlp = spacy.load("en_core_web_lg")
+    doc = nlp(text)
+    listToStr = ' '.join(map(str, doc.ents))
+    return listToStr
+
+
+data['Notes_wo_punct']=data['Notes'].apply(lambda x: remove_punctuation(x))
+data['result']=data['Notes_wo_punct'].apply(lambda x: apply_function(x))
+
+print(data.head)
